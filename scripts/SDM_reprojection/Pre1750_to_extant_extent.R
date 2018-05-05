@@ -28,9 +28,17 @@ ras_CRS <- raster("data/masks/vicmask225vg.tif")
 ras_list <- list.files("data/TO_BE_SORTED/SMP_Pre1750_HDMS_MultiSppFlora/",
                        pattern = ".tif$")
 
-ras_list <- str_replace(ras_list,
+ras_list_new <- str_replace(ras_list,
                         "MultiSppSubSpp50RF66All_",
                         "")
+
+ras_list_new <- str_replace(ras_list_new,
+                        "Spp_",
+                        "Spp")
+
+ras_list_new <- str_replace(ras_list_new,
+                        ".tif",
+                        "_masked.tif")
 
 ras_list2 <- list.files("data/sdm_outputs/",
                         pattern = ".tif$")
@@ -39,13 +47,14 @@ ras_list2 <- list.files("data/sdm_outputs/",
 ## model output already. This folder includes fauna as well, and they
 ## are aready done
 
-ras_list <- ras_list[-which(ras_list %in% ras_list2)]
+ras_list <- ras_list[-which(ras_list_new %in% ras_list2)]
+ras_list_new <- ras_list_new[-which(ras_list_new %in% ras_list2)]
 
 ## Loop through all files to mask and save to correct place
 
 for(i in seq_len(length(ras_list))){
   
-  filepath_old <- sprintf("data/TO_BE_SORTED/SMP_Pre1750_HDMS_MultiSppFlora/MultiSppSubSpp50RF66All_%s",
+  filepath_old <- sprintf("data/TO_BE_SORTED/SMP_Pre1750_HDMS_MultiSppFlora/%s",
                           ras_list[i])
   
   tmp <- raster(filepath_old)
@@ -55,7 +64,7 @@ for(i in seq_len(length(ras_list))){
   projection(tmp) <- projection(ras_CRS)
   
   filepath_new <- sprintf("data/sdm_outputs/%s",
-                          ras_list[i])
+                          ras_list_new[i])
   writeRaster(tmp,
               filepath_new,
               overwrite = TRUE)
