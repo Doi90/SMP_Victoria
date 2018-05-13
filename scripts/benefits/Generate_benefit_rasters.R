@@ -24,6 +24,14 @@ library(raster)
 #library(tcltk)
 library(triangle)
 
+#############################
+### Command Line Argument ###
+#############################
+
+command_args <- commandArgs(trailingOnly = TRUE)
+
+taxon_id <- command_args[1]
+
 #################
 ### Load Data ###
 #################
@@ -53,7 +61,7 @@ mstopvals.na <- c(200, 300, 50, 100, 100)
 
 ## Looping over taxon groups
 
-for(k in seq_len(5)){  
+for(k in taxon_id){  
   
   group <- sprintf("%ss", grpnms[k])
   
@@ -96,6 +104,8 @@ for(k in seq_len(5)){
   sim_benefits <- matrix(NA,
                          nrow = nrow(responses),
                          ncol = 1000)
+  
+  set.seed(28041948)
   
   for(i in seq_len(nrow(responses))){
     
